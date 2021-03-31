@@ -63,3 +63,23 @@ func (db *DB) FindByID(ID string) *model.Dog {
 	res.Decode(&dog)
 	return &dog
 }
+
+func (db *DB) All() []*model.Dog {
+	collection := db.client.Database("animals").Collection("dogs")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	cur, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	var dogs []*model.Dog
+	for cur.Next(ctx) {
+		var dog *model.Dog
+		err := cur.Decode(&dog)
+		if err != nil {
+			log.Fatal(err)
+		}
+		dogs = append(dogs, dog)
+	}
+	return dogs
+}

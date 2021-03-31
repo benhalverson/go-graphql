@@ -5,22 +5,24 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
+	"benhalverson.me/database"
 	"benhalverson.me/graph/generated"
 	"benhalverson.me/graph/model"
 )
 
+var db = database.Connect()
+
 func (r *mutationResolver) CreateDog(ctx context.Context, input *model.NewDog) (*model.Dog, error) {
-	panic(fmt.Errorf("not implemented"))
+	return db.Save(input), nil
 }
 
 func (r *queryResolver) Dog(ctx context.Context, id string) (*model.Dog, error) {
-	panic(fmt.Errorf("not implemented"))
+	return db.FindByID(id), nil
 }
 
 func (r *queryResolver) Dogs(ctx context.Context) ([]*model.Dog, error) {
-	panic(fmt.Errorf("not implemented"))
+	return db.All(), nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
